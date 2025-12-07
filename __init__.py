@@ -4,105 +4,122 @@ import urllib.request
 import zipfile
 import folder_paths
 
-# --- CONFIGURATION ---
+# --- REPOSITORY CONFIGURATION ---
 GITHUB_USER = "UmeAiRT"
 REPO_NAME = "ComfyUI-Workflows"
 BRANCH = "main"
 
-# Automatic URLs
+# Auto-generated URLs based on config
 ZIP_URL = f"https://github.com/{GITHUB_USER}/{REPO_NAME}/archive/refs/heads/{BRANCH}.zip"
 VERSION_URL = f"https://raw.githubusercontent.com/{GITHUB_USER}/{REPO_NAME}/{BRANCH}/version.txt"
 ZIP_ROOT_NAME = f"{REPO_NAME}-{BRANCH}"
 MENU_NAME = "UmeAiRT"
 
-# --- COLORS FOR CONSOLE ---
-CYAN = "\033[36m"
-GREEN = "\033[92m"
-YELLOW = "\033[93m"
-RED = "\033[91m"
-RESET = "\033[0m"
+# --- CONSOLE COLORS SETUP ---
+# Initializes colorama to ensure ANSI colors work correctly on Windows CMD/PowerShell
+try:
+    import colorama
+    from colorama import Fore, Style
+    colorama.init(convert=True, autoreset=True)
+    CYAN = Fore.CYAN
+    GREEN = Fore.GREEN
+    YELLOW = Fore.YELLOW
+    RED = Fore.RED
+    RESET = Style.RESET_ALL
+except ImportError:
+    # Fallback if colorama is not present
+    CYAN = GREEN = YELLOW = RED = RESET = ""
 
 def check_and_update():
-    print(f"############################################################")
-    print(f"##             {CYAN}UmeAiRT{RESET} {YELLOW}Workflows (Auto-Sync){RESET}              ##")
-    print(f"############################################################")
-    # 1. Define paths
+    """
+    Checks the remote repository for updates at startup.
+    Downloads and installs workflows if the remote version differs from the local one.
+    """
+    
+    # 1. Setup paths
     base_path = os.path.dirname(folder_paths.__file__)
-    # Final destination: ComfyUI/user/default/workflows/UmeAiRT
+    # Target path: ComfyUI/user/default/workflows/UmeAiRT
     dest_path = os.path.join(base_path, "user", "default", "workflows", MENU_NAME)
     local_version_file = os.path.join(dest_path, "version.txt")
     
-    # 2. Read local version (if exists)
+    # 2. Read local version
     current_version = "0"
     if os.path.exists(local_version_file):
         try:
             with open(local_version_file, 'r', encoding='utf-8') as f:
                 current_version = f.read().strip()
-        except:
+        except Exception:
             pass
 
-    # 3. Check remote version (GitHub)
-    print(f"{CYAN}[UmeAiRT-Sync]{RESET} 🔍 Checking for updates...")
+    # 3. Check remote version
+    print(f"[{CYAN}UmeAiRT-Sync{RESET}] 🔍 Checking for updates...")
+    
     try:
         with urllib.request.urlopen(VERSION_URL) as response:
             remote_version = response.read().decode('utf-8').strip()
     except Exception as e:
-        print(f"{CYAN}[UmeAiRT-Sync]{RESET}{RED} ⚠️ Could not check for updates (No internet?). Keeping current version.{RESET}")
-        print(f"############################################################")
+        print(f"[{CYAN}UmeAiRT-Sync{RESET}] {RED}⚠️ Check failed (No internet?). Keeping v{current_version}.{RESET}")
         return
 
-    # 4. Compare: If versions match, do nothing (fast startup)
+    # 4. Compare versions
     if current_version == remote_version and os.path.exists(dest_path):
-        print(f"{CYAN}[UmeAiRT-Sync]{RESET}{GREEN} ✅ Workflows are up to date (v{current_version}).{RESET}")
-        print(f"############################################################")
+        print(f"[{CYAN}UmeAiRT-Sync{RESET}]{GREEN} ✅ Workflows are up to date (v{current_version}).{RESET}")
         return
 
-    # 5. If different, start update process
-    print(f"{CYAN}[UmeAiRT-Sync]{RESET}{YELLOW} 📥 New version detected (v{remote_version})! Downloading...{RESET}")
+    # 5. Perform Update
+    print(f"[{CYAN}UmeAiRT-Sync{RESET}]{YELLOW} 📥 New version detected (v{remote_version})! Downloading...{RESET}")
     
     try:
-        # Define temp paths
-        zip_path = os.path.join(base_path, "temp_umeairt.zip")
+        temp_zip_path = os.path.join(base_path, "temp_umeairt.zip")
         
-        # Download ZIP
-        urllib.request.urlretrieve(ZIP_URL, zip_path)
+        # Download repository zip
+        urllib.request.urlretrieve(ZIP_URL, temp_zip_path)
         
-        # Extract
-        with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+        # Extract content
+        with zipfile.ZipFile(temp_zip_path, 'r') as zip_ref:
             zip_ref.extractall(base_path)
         
         extracted_folder = os.path.join(base_path, ZIP_ROOT_NAME)
         
-        # Cleanup old folder
+        # Remove old directory if it exists
         if os.path.exists(dest_path):
             shutil.rmtree(dest_path)
             
-        # Move new folder to destination
+        # Move extracted files to destination
         shutil.move(extracted_folder, dest_path)
         
-        # Cleanup zip
-        os.remove(zip_path)
-        print(f"{CYAN}[UmeAiRT-Sync]{RESET}{GREEN} ✨ Successfully updated to v{remote_version}!{RESET}")
-        print(f"############################################################")
+        # Cleanup temporary zip
+        os.remove(temp_zip_path)
+        print(f"[{CYAN}UmeAiRT-Sync{RESET}] {GREEN}✨ Successfully updated to v{remote_version}!{RESET}")
 
     except Exception as e:
-        print(f"{CYAN}[UmeAiRT-Sync]{RESET}{RED} ❌ Update failed: {e}{RESET}")
-        print(f"############################################################")
+        print(f"[{CYAN}UmeAiRT-Sync{RESET}] {RED}❌ Update failed: {e}{RESET}")
 
-# Run check at startup
+# Execute synchronization logic on import
 check_and_update()
 
-# --- MANAGER NODE SIGNATURE ---
-# Required to be recognized as a valid extension by ComfyUI Manager
+# --- NODE DEFINITION ---
+# Defines a dummy node to ensure the folder is recognized as a Custom Node by ComfyUI
 class UmeAiRT_Sync_Node:
     def __init__(self): pass
+    
     @classmethod
-    def INPUT_TYPES(s): return {"required": {}}
+    def INPUT_TYPES(s): 
+        return {"required": {}}
+        
     RETURN_TYPES = ("STRING",)
     FUNCTION = "noop"
     CATEGORY = "UmeAiRT"
-    def noop(self): return ("Installed",)
+    
+    def noop(self): 
+        return ("Installed",)
 
-NODE_CLASS_MAPPINGS = {"UmeAiRT_Sync_Node": UmeAiRT_Sync_Node}
-NODE_DISPLAY_NAME_MAPPINGS = {"UmeAiRT_Sync_Node": "🔄 UmeAiRT Workflows (Auto-Sync)"}
+NODE_CLASS_MAPPINGS = {
+    "UmeAiRT_Sync_Node": UmeAiRT_Sync_Node
+}
+
+NODE_DISPLAY_NAME_MAPPINGS = {
+    "UmeAiRT_Sync_Node": "🔄 UmeAiRT Workflows (Auto-Sync)"
+}
+
 __all__ = ['NODE_CLASS_MAPPINGS', 'NODE_DISPLAY_NAME_MAPPINGS']
