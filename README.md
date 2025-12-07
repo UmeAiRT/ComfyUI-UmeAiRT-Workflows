@@ -8,11 +8,13 @@ All workflows are provided as **Embedded PNGs** (images containing the workflow 
 ## 📂 Content
 
 This repository includes optimized workflows for:
-* **Flux.1** (Dev & Schnell)
-* **SDXL** (Turbo, Lightning, Base)
-* **AnimateDiff**
-* **SVD** (Stable Video Diffusion)
-* And more...
+* **SDXL**
+* **FLUX** 
+* **WAN**
+* **QWEN**
+* **HIDREAM**
+* **Z-IMAGE**
+* **LTXV**
 
 ## 📥 Installation
 
