@@ -1,9 +1,0 @@
-[node]
-name = "ComfyUI-UmeAiRT-Workflows"
-description = "Personal UmeAiRT Workflow collection."
-version = "1.0.0"
-author = "UmeAiRT"
-license = "MIT"
-
-[templates]
-manifest = "index.json"
