@@ -1,0 +1,25 @@
+[project]
+name = "comfyui-umeairt-sync"
+description = "Automatic workflow synchronizer/loader for UmeAiRT Workflows (Flux, SDXL, WAN, etc.)."
+version = "1.0.1"
+license = {file = "LICENSE"}
+authors = [
+  {name = "UmeAiRT", email = "your@email.com"}
+]
+readme = "README.md"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+Repository = "https://github.com/UmeAiRT/ComfyUI-UmeAiRT-Sync"
+# Used by Comfy Registry
+Documentation = "https://github.com/UmeAiRT/ComfyUI-UmeAiRT-Sync/blob/main/README.md"
+"Bug Tracker" = "https://github.com/UmeAiRT/ComfyUI-UmeAiRT-Sync/issues"
+
+[tool.comfy]
+PublisherId = "umeairt"
+DisplayName = "ComfyUI-UmeAiRT-Sync"
+Icon = ""
