@@ -1,6 +1,6 @@
 {
   "name": "ComfyUI-UmeAiRT-Sync",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Automatic workflow synchronizer/loader for UmeAiRT Workflows (Flux, SDXL, WAN, etc.).",
   "author": "UmeAiRT",
   "license": "MIT",
