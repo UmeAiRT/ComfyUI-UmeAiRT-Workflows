@@ -4,7 +4,7 @@ description = "Automatic workflow synchronizer/loader for UmeAiRT Workflows (Flu
 version = "1.0.1"
 license = {file = "LICENSE"}
 authors = [
-  {name = "UmeAiRT", email = "your@email.com"}
+  {name = "UmeAiRT"}
 ]
 readme = "README.md"
 classifiers = [
@@ -15,11 +15,13 @@ classifiers = [
 
 [project.urls]
 Repository = "https://github.com/UmeAiRT/ComfyUI-UmeAiRT-Sync"
-# Used by Comfy Registry
-Documentation = "https://github.com/UmeAiRT/ComfyUI-UmeAiRT-Sync/blob/main/README.md"
+#  Used by Comfy Registry https://registry.comfy.org
+Documentation = "https://github.com/UmeAiRT/ComfyUI-UmeAiRT-Sync/wiki"
 "Bug Tracker" = "https://github.com/UmeAiRT/ComfyUI-UmeAiRT-Sync/issues"
 
 [tool.comfy]
 PublisherId = "umeairt"
 DisplayName = "ComfyUI-UmeAiRT-Sync"
 Icon = ""
+includes = [] 
+# "requires-comfyui" = ">=1.0.0"  # ComfyUI version compatibility
