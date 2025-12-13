@@ -23,7 +23,7 @@ This custom node automatically installs, organizes, and updates the professional
 1.  Navigate to your `ComfyUI/custom_nodes/` directory.
 2.  Clone this repository:
     ```bash
-    git clone [https://github.com/UmeAiRT/ComfyUI-UmeAiRT-Sync.git](https://github.com/UmeAiRT/ComfyUI-UmeAiRT-Sync.git)
+    git clone https://github.com/UmeAiRT/ComfyUI-UmeAiRT-Sync.git
     ```
 3.  Restart ComfyUI.
 
